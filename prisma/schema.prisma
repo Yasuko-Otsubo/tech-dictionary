@@ -12,6 +12,11 @@ datasource db {
   provider = "sqlite"
 }
 
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+}
+
 model Terms {
   id              Int         @id @default(autoincrement())
   itemName        String
@@ -46,6 +51,8 @@ model TermsTag {
 model Profile {
   id              Int         @id @default(autoincrement())
   name            String
+  email           String      @unique
+  AuthProvider    AuthProvider@map("auth_provider")
   supabaseUserId  String      @unique @map("supabase_user_id")
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
