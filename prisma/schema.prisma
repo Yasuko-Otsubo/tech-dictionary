@@ -5,9 +5,55 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  output   = "../src/app/generated/prisma"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
+}
+
+enum AuthProvider {
+  EMAIL
+  GOOGLE
+}
+
+model Terms {
+  id              Int         @id @default(autoincrement())
+  itemName        String
+  itemContent     String?
+  referenceUrl    String?
+  image           String?
+  isMemorized     Boolean     @default(false)
+  userId          Int?
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt  @map("updated_at")
+
+  tags            TermsTag[]
+}
+
+model Tag {
+  id              Int         @id @default(autoincrement())
+  name            String
+
+  Terms           TermsTag[]
+}
+
+model TermsTag {
+  termsId         Int
+  tagId           Int
+
+  terms           Terms       @relation(fields: [termsId], references:[id], onDelete:Cascade)
+  tag             Tag         @relation(fields:[tagId], references:[id], onDelete:Cascade)
+
+  @@id([termsId, tagId])
+}
+
+model Profile {
+  id              Int         @id @default(autoincrement())
+  name            String
+  email           String      @unique
+  authProvider    AuthProvider @map("auth_provider")
+  supabaseUserId  String      @unique @map("supabase_user_id")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
 }
