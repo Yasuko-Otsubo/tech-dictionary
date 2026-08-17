@@ -3,17 +3,22 @@
 import { prisma } from "../prisma";
 import { createSupabaseServerClient } from "../supabase-server";
 
-export async function signUpWithEmail(formData: FormData) {
+type AuthResponse = { success: true } | { success: false; error: string };
+
+export async function signUpWithEmail(
+  prevState: AuthResponse | null,
+  formData: FormData,
+): Promise<AuthResponse> {
   const emailValue = formData.get("email");
 
   if (typeof emailValue !== "string" || !emailValue) {
-    return { error: "メールアドレスを入力してしてください" };
+    return { success: false, error: "メールアドレスを入力してしてください" };
   }
 
   const passwordValue = formData.get("password");
 
   if (typeof passwordValue !== "string" || !passwordValue) {
-    return { error: "パスワードを入力してください" };
+    return { success: false, error: "パスワードを入力してください" };
   }
 
   const existingProfile = await prisma.profile.findUnique({
@@ -22,9 +27,15 @@ export async function signUpWithEmail(formData: FormData) {
 
   if (existingProfile) {
     if (existingProfile.authProvider === "GOOGLE") {
-      return { error: "Googleで登録済みのメールアドレスです。" };
+      return {
+        success: false,
+        error: "Googleで登録済みのメールアドレスです。",
+      };
     }
-    return { error: "このメールアドレスは既に登録されています" };
+    return {
+      success: false,
+      error: "このメールアドレスは既に登録されています",
+    };
   }
 
   const supabase = await createSupabaseServerClient();
@@ -35,7 +46,7 @@ export async function signUpWithEmail(formData: FormData) {
   });
 
   if (signUpError || !data.user) {
-    return { error: "登録に失敗しました" };
+    return { success: false, error: "登録に失敗しました" };
   }
 
   const name = emailValue.split("@")[0];
