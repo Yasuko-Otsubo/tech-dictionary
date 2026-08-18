@@ -1,11 +1,12 @@
 "use client";
 
 import { useActionState } from "react";
-import { signUpWithEmail } from "../_libs/_actions/emailAuth";
+import { signInWithEmail } from "../_libs/_actions/emailAuth";
 import { supabase } from "../_libs/supabase";
+import Link from "next/link";
 
 export default function LoginPage() {
-  const [state, formAction] = useActionState(signUpWithEmail, null);
+  const [loginState, loginAction] = useActionState(signInWithEmail, null);
 
   const handleGoogleLogin = async () => {
     await supabase.auth.signInWithOAuth({
@@ -20,13 +21,14 @@ export default function LoginPage() {
     <div>
       <button onClick={handleGoogleLogin}>Googleでログイン</button>
 
-      <form action={formAction}>
+      <form action={loginAction}>
         <input type="email" name="email" placeholder="メールアドレス" />
         <input type="password" name="password" placeholder="パスワード" />
-        <button type="submit">新規登録</button>
+        <button type="submit">ログイン</button>
       </form>
 
-      {state && !state.success && <p>{state.error}</p>}
+      {loginState && !loginState.success && <p>{loginState.error}</p>}
+      <Link href="/sign_up">アカウントをお持ちでない方はこちら</Link>
     </div>
   );
 }
