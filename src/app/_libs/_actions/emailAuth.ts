@@ -62,3 +62,33 @@ export async function signUpWithEmail(
 
   return { success: true };
 }
+
+export async function signInWithEmail(
+  prevState: AuthResponse | null,
+  formData: FormData,
+): Promise<AuthResponse> {
+  const emailValue = formData.get("email");
+
+  if (typeof emailValue !== "string" || !emailValue) {
+    return { success: false, error: "メールアドレスを入力してください" };
+  }
+
+  const passwordValue = formData.get("password");
+
+  if (typeof passwordValue !== "string" || !passwordValue) {
+    return { success: false, error: "パスワードを入力してください" };
+  }
+
+  const supabase = await createSupabaseServerClient();
+
+  const { data, error: signInError } = await supabase.auth.signInWithPassword({
+    email: emailValue,
+    password: passwordValue,
+  });
+
+  if (signInError || !data.user) {
+    return { success: false, error: "ログインに失敗しました" };
+  }
+
+  return { success: true };
+}
