@@ -79,6 +79,18 @@ export async function signInWithEmail(
     return { success: false, error: "パスワードを入力してください" };
   }
 
+  const existingProfile = await prisma.profile.findUnique({
+    where: { email: emailValue },
+  });
+
+  if (existingProfile?.authProvider === "GOOGLE") {
+    return {
+      success: false,
+      error:
+        "Googleで登録されたメールアドレスです。Googleでログインしてください。",
+    };
+  }
+
   const supabase = await createSupabaseServerClient();
 
   const { data, error: signInError } = await supabase.auth.signInWithPassword({
