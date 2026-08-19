@@ -2,7 +2,7 @@ import { prisma } from "@/app/_libs/prisma";
 import { createSupabaseServerClient } from "@/app/_libs/supabase-server";
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET (request: NextRequest) {
+export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
   const next = url.searchParams.get("next") || "/auth/complete";
@@ -23,6 +23,17 @@ export async function GET (request: NextRequest) {
   });
 
   if (!existingProfile) {
+    const emailConflict = await prisma.profile.findUnique({
+      where: { email: data.user.email! },
+    });
+
+    if (emailConflict) {
+      await supabase.auth.signOut();
+      return NextResponse.redirect(
+        new URL("/login?error=email_already_registered", request.url),
+      );
+    }
+
     const name =
       data.user.user_metadata?.full_name ??
       data.user.email?.split("@")[0] ??
@@ -37,5 +48,6 @@ export async function GET (request: NextRequest) {
       },
     });
   }
+
   return NextResponse.redirect(new URL(next, request.url));
 }
