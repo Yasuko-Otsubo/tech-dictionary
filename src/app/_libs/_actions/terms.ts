@@ -1,7 +1,8 @@
 "use server";
 
-import { getCurrentProfile } from "../getCurrentProfile";
 import { redirect } from "next/navigation";
+import { getCurrentProfile } from "../getCurrentProfile";
+import { termSchema } from "./schemas/terms";
 import { prisma } from "../prisma";
 
 type TermResponse = { success: true } | { success: false; error: string };
@@ -16,27 +17,26 @@ export async function createTerm(
     redirect("/login");
   }
 
-  const itemName = formData.get("itemName");
-  if (typeof itemName !== "string" || !itemName) {
-    return { success: false, error: "用語名を入力してください" };
-  }
+  const parsed = termSchema.safeParse({
+    itemName: formData.get("itemName"),
+    itemContent: formData.get("itemContent"),
+    referenceUrl: formData.get("referenceUrl"),
+    image: formData.get("image"),
+  });
 
-  function toNullableString(value: FormDataEntryValue | null): string | null {
-    return typeof value === "string" && value.trim() !== "" ? value : null;
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0].message };
   }
-
-  const itemContentValue = toNullableString(formData.get("itemContent"));
-  const referenceUrlValue = toNullableString(formData.get("referenceUrl"));
-  const imageValue = toNullableString(formData.get("image"));
 
   await prisma.terms.create({
     data: {
-      itemName,
-      itemContent: itemContentValue,
-      referenceUrl: referenceUrlValue,
-      image: imageValue,
+      itemName: parsed.data.itemName,
+      itemContent: parsed.data.itemContent,
+      referenceUrl: parsed.data.referenceUrl,
+      image: parsed.data.image,
       userId: profile.id,
     },
   });
+
   return { success: true };
 }
