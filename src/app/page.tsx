@@ -6,7 +6,7 @@ import Link from "next/link";
 export default async function TermListPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string }>;
+  searchParams: Promise<{ sort?: string; q?: string }>;
 }) {
   const profile = await getCurrentProfile();
 
@@ -14,10 +14,13 @@ export default async function TermListPage({
     redirect("/login");
   }
 
-  const { sort } = await searchParams;
+  const { sort, q } = await searchParams;
 
   const terms = await prisma.terms.findMany({
-    where: { userId: profile.id },
+    where: {
+      userId: profile.id,
+      ...(q ? { itemName: { contains: q, mode: "insensitive" } } : {}),
+    },
     orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "asc" },
   });
 
@@ -35,6 +38,16 @@ export default async function TermListPage({
       </div>
 
       <hr className="mt-2 mb-2" />
+      <form>
+        <input
+          className="border-1"
+          type="text"
+          name="q"
+          defaultValue={q}
+          placeholder="キーワードの一部でOK"
+        />
+        <button type="submit">検索</button>
+      </form>
 
       <ul>
         {terms.map((term) => (
