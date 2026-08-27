@@ -23,7 +23,7 @@ export default function NewTermForm() {
     startTransition(async () => {
       const result = await createTerm(data);
       if(result.success) {
-        router.push("/terms");
+        router.push("/");
       }
     });
   };
