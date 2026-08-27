@@ -3,6 +3,7 @@
 import { TermFormValues, termSchema } from "@/app/_libs/_actions/schemas/terms";
 import { createTerm } from "@/app/_libs/_actions/terms";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 
@@ -16,10 +17,14 @@ export default function NewTermForm() {
   });
 
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   const onSubmit = (data: TermFormValues) => {
     startTransition(async () => {
       const result = await createTerm(data);
+      if(result.success) {
+        router.push("/terms");
+      }
     });
   };
 
