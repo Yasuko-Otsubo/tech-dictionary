@@ -49,3 +49,37 @@ export async function deleteTerm(id: number) {
     where: { id },
   });
 }
+
+export async function updateTerm(
+  id: number,
+  data: TermFormValues,
+): Promise<TermResponse> {
+  const profile = await getCurrentProfile();
+
+  if (!profile) {
+    redirect("/login");
+  }
+
+  const parsed = termSchema.safeParse(data);
+
+  if (!parsed.success) {
+    return { success: false, error: parsed.error.issues[0].message };
+  }
+
+  const term = await prisma.terms.findFirst({
+    where: { id, userId: profile.id },
+  });
+
+  if (!term) {
+    return { success: false, error: "更新対象が見つかりません" };
+  }
+
+  await prisma.terms.update({
+    where: { id },
+    data: {
+      ...parsed.data,
+    },
+  });
+
+  return { success: true };
+}
