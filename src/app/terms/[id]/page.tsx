@@ -1,6 +1,8 @@
 import { getCurrentProfile } from "@/app/_libs/getCurrentProfile";
 import { prisma } from "@/app/_libs/prisma";
 import { notFound, redirect } from "next/navigation";
+import DeleteTermButton from "./_components/DeleteTermButton";
+import Link from "next/link";
 
 export default async function DetailTerm({
   params,
@@ -27,10 +29,18 @@ export default async function DetailTerm({
 
   return (
     <div>
-      <h1>{term.itemName}</h1>
-      {term.itemContent && <p>{term.itemContent}</p>}
-      {term.referenceUrl && (<a href={term.referenceUrl} target="_blank" rel="noopener noreferrer">参考リンク</a>)}
-      {term.image && <img src={term.image} alt={term.itemName} />}
+      <Link href={`/terms/${term.id}/edit`}>編集</Link>
+      <DeleteTermButton id={term.id} />
+      <div>
+        <h1>{term.itemName}</h1>
+        {term.itemContent && <p>{term.itemContent}</p>}
+        {term.referenceUrl && (
+          <a href={term.referenceUrl} target="_blank" rel="noopener noreferrer">
+            参考リンク
+          </a>
+        )}
+        {term.image && <img src={term.image} alt={term.itemName} />}
+      </div>
     </div>
-  )
+  );
 }
