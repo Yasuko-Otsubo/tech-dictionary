@@ -7,7 +7,7 @@ import CreateTagButton from "./_components/CreateTagButton";
 export default async function TermListPage({
   searchParams,
 }: {
-  searchParams: Promise<{ sort?: string; q?: string }>;
+  searchParams: Promise<{ sort?: string; q?: string; tag?: string }>;
 }) {
   const profile = await getCurrentProfile();
 
@@ -15,12 +15,13 @@ export default async function TermListPage({
     redirect("/login");
   }
 
-  const { sort, q } = await searchParams;
+  const { sort, q, tag } = await searchParams;
 
   const terms = await prisma.terms.findMany({
     where: {
       userId: profile.id,
       ...(q ? { itemName: { contains: q, mode: "insensitive" } } : {}),
+      ...(tag ? { tags: { some: { tagId: Number(tag) } } } : {}),
     },
     orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "asc" },
   });
@@ -40,8 +41,10 @@ export default async function TermListPage({
         </Link>
       </div>
       <div>
-        {tags.map((tag) => (
-          <span key={tag.id}>{tag.name}</span>
+        {tags.map((t) => (
+          <Link key={t.id} href={tag === String(t.id) ? "/" : `/?tag=${t.id}`}>
+            {t.name}
+          </Link>
         ))}
         <CreateTagButton hasTags={tags.length > 0} />
       </div>
