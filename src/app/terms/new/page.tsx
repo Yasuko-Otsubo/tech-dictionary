@@ -1,5 +1,5 @@
 import { getCurrentProfile } from "@/app/_libs/getCurrentProfile";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import NewTermForm from "./_components/NewTermForm";
 import { prisma } from "@/app/_libs/prisma";
 
@@ -16,5 +16,5 @@ export default async function NewTermPage() {
     },
   });
 
-  return <NewTermForm tags={tags}/>;
+  return <NewTermForm tags={tags} />;
 }
