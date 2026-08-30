@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { getCurrentProfile } from "./_libs/getCurrentProfile";
 import { prisma } from "./_libs/prisma";
 import Link from "next/link";
+import CreateTagButton from "./_components/CreateTagButton";
 
 export default async function TermListPage({
   searchParams,
@@ -24,6 +25,12 @@ export default async function TermListPage({
     orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "asc" },
   });
 
+  const tags = await prisma.tag.findMany({
+    where: {
+      userId: profile.id,
+    },
+  });
+
   return (
     <div>
       <div className="flex justify-between items-center m-2">
@@ -33,11 +40,18 @@ export default async function TermListPage({
         </Link>
       </div>
       <div>
+        {tags.map((tag) => (
+          <span key={tag.id}>{tag.name}</span>
+        ))}
+        <CreateTagButton hasTags={tags.length > 0} />
+      </div>
+      <div>
         <Link href="/">登録順</Link>
         <Link href="/?sort=name">あいうえお順</Link>
       </div>
 
       <hr className="mt-2 mb-2" />
+
       <form>
         <input
           className="border-1"
