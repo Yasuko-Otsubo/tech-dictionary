@@ -1,5 +1,6 @@
 "use client";
 
+import CreateTagButton from "@/app/_components/CreateTagButton";
 import { TermFormValues, termSchema } from "@/app/_libs/_actions/schemas/terms";
 import { updateTerm } from "@/app/_libs/_actions/terms";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,9 +11,11 @@ import { useForm } from "react-hook-form";
 export default function EditTermForm({
   id,
   defaultValues,
+  tags,
 }: {
   id: number;
   defaultValues: TermFormValues;
+  tags: { id: number; name: string; userId: number }[];
 }) {
   const {
     register,
@@ -56,6 +59,15 @@ export default function EditTermForm({
       <label>画像</label>
       <input className="border-1" id="image" {...register("image")} />
       {errors.image && <p>{errors.image.message}</p>}
+      <div>
+        {tags.map((tag) => (
+          <label key={tag.id}>
+            <input type="checkbox" value={tag.name} {...register("tags")} />
+            {tag.name}
+          </label>
+        ))}
+        <CreateTagButton hasTags={tags.length > 0 } />
+      </div>
       <button className="border-[1]" type="submit">
         編集
       </button>
