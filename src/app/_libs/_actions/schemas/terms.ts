@@ -5,6 +5,7 @@ export const termSchema = z.object({
   itemContent: z.string().optional(),
   referenceUrl: z.url("正しいURLを入力してください").optional().or(z.literal("")),
   image: z.string().optional(),
+  tags: z.array(z.string()).optional(),
 });
 
 export type TermFormValues = z.infer<typeof termSchema>;

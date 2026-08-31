@@ -20,21 +20,34 @@ export default async function UpdateTerm({
       id: Number(id),
       userId: profile.id,
     },
+    include: {
+      tags: {
+        include: { tag: true },
+      },
+    },
   });
 
   if (!term) {
     notFound();
   }
 
+  const tags = await prisma.tag.findMany({
+    where: {
+      userId: profile.id,
+    },
+  });
+
   return (
     <div>
       <EditTermForm
+      tags={tags}
         id={term.id}
         defaultValues={{
           itemName: term.itemName,
           itemContent: term.itemContent ?? "",
           referenceUrl: term.referenceUrl ?? "",
           image: term.image ?? "",
+          tags: term.tags.map((t) => t.tag.name),
         }}
       />
     </div>
