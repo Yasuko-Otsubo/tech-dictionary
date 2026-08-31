@@ -6,20 +6,17 @@ const adapter = new PrismaPg({
 });
 
 
-export const prisma = new PrismaClient({ adapter })
+// export const prisma = new PrismaClient({ adapter })
 
 
-/*
-SQLiteからPosgtresQLに変更により削除
+/*SQLiteからPosgtresQLに変更により削除*/
+
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
 };
-*/
-/*
-SQLiteからPosgtresQLに変更により削除
+/*SQLiteからPosgtresQLに変更により削除*/
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({ adapter });
 
 if (process.env.NODE_ENV !== "production") {
   globalForPrisma.prisma = prisma;
 }
-*/
