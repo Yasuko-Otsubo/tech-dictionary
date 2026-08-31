@@ -45,7 +45,7 @@ export default async function UpdateTerm({
         defaultValues={{
           itemName: term.itemName,
           itemContent: term.itemContent ?? "",
-          referenceUrl: term.referenceUrl ?? "",
+          referenceUrls: term.referenceUrls.map((url) => ({ value: url })),
           image: term.image ?? "",
           tags: term.tags.map((t) => t.tag.name),
         }}

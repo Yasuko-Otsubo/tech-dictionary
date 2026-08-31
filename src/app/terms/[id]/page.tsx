@@ -34,12 +34,13 @@ export default async function DetailTerm({
       <div>
         <h1>{term.itemName}</h1>
         {term.itemContent && <p>{term.itemContent}</p>}
-        {term.referenceUrl && (
-          <a href={term.referenceUrl} target="_blank" rel="noopener noreferrer">
-            参考リンク
-          </a>
-        )}
         {term.image && <img src={term.image} alt={term.itemName} />}
+
+        {term.referenceUrls.map((url, index) => (
+          <a key={index} href={url} target="_blank" rel="noopener noreferrer">
+            参考リンク{index + 1}
+          </a>
+        ))}
       </div>
     </div>
   );

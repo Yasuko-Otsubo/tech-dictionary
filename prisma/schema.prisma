@@ -21,7 +21,7 @@ model Terms {
   id              Int         @id @default(autoincrement())
   itemName        String
   itemContent     String?
-  referenceUrl    String?
+  referenceUrls   String[]
   image           String?
   isMemorized     Boolean     @default(false)
   userId          Int?
