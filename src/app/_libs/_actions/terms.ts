@@ -20,7 +20,7 @@ export async function createTerm(data: TermFormValues): Promise<TermResponse> {
     return { success: false, error: parsed.error.issues[0].message };
   }
 
-  const { tags: tagNames, ...termData } = parsed.data;
+  const { tags: tagNames, referenceUrls, ...termData } = parsed.data;
 
   const selectedTags = await prisma.tag.findMany({
     where: {
@@ -32,6 +32,7 @@ export async function createTerm(data: TermFormValues): Promise<TermResponse> {
   await prisma.terms.create({
     data: {
       ...termData,
+      referenceUrls: referenceUrls?.map((r) => r.value) ?? [],
       userId: profile.id,
       tags: {
         create: selectedTags.map((tag) => ({ tagId: tag.id })),
@@ -86,7 +87,7 @@ export async function updateTerm(
     return { success: false, error: "更新対象が見つかりません" };
   }
 
-  const { tags: tagNames, ...termData } = parsed.data;
+  const { tags: tagNames, referenceUrls,  ...termData } = parsed.data;
 
   const selectedTags = await prisma.tag.findMany({
     where: {
@@ -99,6 +100,7 @@ export async function updateTerm(
     where: { id },
     data: {
       ...termData,
+      referenceUrls: referenceUrls?.map((r) => r.value) ?? [],
       tags: {
         deleteMany: {},
         create: selectedTags.map((tag) => ({ tagId: tag.id })),
