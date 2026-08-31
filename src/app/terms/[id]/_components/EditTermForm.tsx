@@ -6,7 +6,7 @@ import { updateTerm } from "@/app/_libs/_actions/terms";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 
 export default function EditTermForm({
   id,
@@ -19,11 +19,17 @@ export default function EditTermForm({
 }) {
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<TermFormValues>({
     resolver: zodResolver(termSchema),
     defaultValues,
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: "referenceUrls",
   });
 
   const [isPending, startTransition] = useTransition();
@@ -49,15 +55,24 @@ export default function EditTermForm({
         {...register("itemContent")}
       />
       {errors.itemContent && <p>{errors.itemContent.message}</p>}
-      <label>url</label>
-      <input
-        className="border-1"
-        id="referenceUrl"
-        {...register("referenceUrl")}
-      />
-      {errors.referenceUrl && <p>{errors.referenceUrl.message}</p>}
       <label>画像</label>
       <input className="border-1" id="image" {...register("image")} />
+
+      <label>参考URL</label>
+      {fields.map((field, index) => (
+        <div key={field.id}>
+          <input
+            className="border-[1]"
+            {...register(`referenceUrls.${index}.value`)}
+          />
+          <button type="button" onClick={() => remove(index)}>
+            削除
+          </button>
+        </div>
+      ))}
+      <button type="button" onClick={() => append({ value: "" })}>
+        URLを追加
+      </button>
       {errors.image && <p>{errors.image.message}</p>}
       <div>
         {tags.map((tag) => (
@@ -66,7 +81,7 @@ export default function EditTermForm({
             {tag.name}
           </label>
         ))}
-        <CreateTagButton hasTags={tags.length > 0 } />
+        <CreateTagButton hasTags={tags.length > 0} />
       </div>
       <button className="border-[1]" type="submit">
         編集
