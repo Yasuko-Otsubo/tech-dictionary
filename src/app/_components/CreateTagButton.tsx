@@ -23,8 +23,8 @@ export default function CreateTagButton({ hasTags }: { hasTags: boolean}) {
 
   if (!isOpen) {
     return (
-    <button onClick={() => setIsOpen(true)}>
-      {hasTags ? "+": "タグ追加"}
+    <button onClick={() => setIsOpen(true)} className="inline-block border rounded-4xl py-1 px-2">
+      {hasTags ? "＋": "タグ追加"}
       </button>
     );
   }
