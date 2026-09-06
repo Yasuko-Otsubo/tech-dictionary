@@ -60,7 +60,7 @@ export default async function TermListPage({
                 key={t.id}
                 href={isActive ? "/" : `/?tag=${t.id}`}
                 className={`inline-block border rounded-sm px-2 py-1 mr-2 ${
-                  isActive ? "bg-[#E4F1F8] text-[#1F2937] border-[#7FB9DE]" : ""
+                  isActive ? "bg-[#9CC7E3] text-[#1F2937] border-[#5FA0C7]" : ""
                 }`}
               >
                 {t.name}
