@@ -3,6 +3,7 @@ import { getCurrentProfile } from "./_libs/getCurrentProfile";
 import { prisma } from "./_libs/prisma";
 import Link from "next/link";
 import CreateTagButton from "./_components/CreateTagButton";
+import DeleteTagButton from "./_components/DeleteTagButton";
 
 export default async function TermListPage({
   searchParams,
@@ -56,21 +57,22 @@ export default async function TermListPage({
           {tags.map((t) => {
             const isActive = tag === String(t.id);
             return (
-              <Link
+              <div
                 key={t.id}
-                href={isActive ? "/" : `/?tag=${t.id}`}
-                className={`inline-block border rounded-sm px-2 py-1 mr-2 ${
-                  isActive ? "bg-[#9CC7E3] text-[#1F2937] border-[#5FA0C7]" : ""
+                style={{ backgroundColor: t.color }}
+                className={`inline-block border rounded-sm px-2 py-1 mr-2 mb-2 text-[#1F2937] ${
+                  isActive ? "ring-2 ring-offset-1 ring-gray-800 " : ""
                 }`}
               >
-                {t.name}
-              </Link>
+                <Link href={isActive ? "/" : `/?tag=${t.id}`}>{t.name}</Link>
+                <DeleteTagButton id={t.id} />
+              </div>
             );
           })}
           <CreateTagButton hasTags={tags.length > 0} />
         </div>
         <Link href="/terms/new">
-          <button className="border px-2 py-1 bg-[#7FB9DE] text-[#1F2937] rounded-sm hover:bg-[#6BA6CC] hover:text-white">
+          <button className="border px-2 py-1 bg-[#7FB9DE] text-[#1F2937] rounded-sm hover:bg-[#6BA6CC] hover:text-white whitespace-nowrap">
             新規登録
           </button>
         </Link>
