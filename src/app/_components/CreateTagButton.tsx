@@ -32,7 +32,7 @@ export default function CreateTagButton({ hasTags }: { hasTags: boolean }) {
       <button
         onClick={() => setIsOpen(true)}
         type="button"
-        className="inline-block border rounded-4xl py-1 px-2"
+        className="inline-block border rounded-4xl py-1 px-2 cursor-pointer"
       >
         {hasTags ? "＋" : "タグ追加"}
       </button>
