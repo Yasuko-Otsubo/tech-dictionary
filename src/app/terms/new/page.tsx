@@ -22,7 +22,7 @@ export default async function NewTermPage() {
       <Link href="/" className="text-sm text-gray-400 hover:text-[#1F2937]">
         ←　一覧に戻る
       </Link>
-      <NewTermForm tags={tags} />;
+      <NewTermForm tags={tags} />
     </div>
   );
 }
