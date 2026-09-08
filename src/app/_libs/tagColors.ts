@@ -9,6 +9,5 @@ export const TAG_COLORS: TagColor[] = [
   { name: "green", value: "#aee6b1" },
   { name: "yellow", value: "#e6ec94" },
   { name: "purple", value: "#baaacf" },
-  { name: "puple2", value: "#d4c8e4"},
   { name: "gray", value: "#c3c3c3" },
 ];
