@@ -4,6 +4,7 @@ import { prisma } from "./_libs/prisma";
 import Link from "next/link";
 import CreateTagButton from "./_components/CreateTagButton";
 import DeleteTagButton from "./_components/DeleteTagButton";
+import { BUTTON_BASE, BUTTON_PRIMARY, LABEL_TEXT } from "./_libs/buttonStyles";
 
 export default async function TermListPage({
   searchParams,
@@ -46,7 +47,7 @@ export default async function TermListPage({
         />
         <button
           type="submit"
-          className="inline-block border rounded-sm px-2 py-1 hover:bg-[#E4F1F8] cursor-pointer "
+          className={`inline-block ${BUTTON_BASE} hover:bg-[#E4F1F8] cursor-pointer `}
         >
           検索
         </button>
@@ -71,8 +72,10 @@ export default async function TermListPage({
           })}
           <CreateTagButton hasTags={tags.length > 0} />
         </div>
-        <Link href="/terms/new">
-          <button className="border px-2 py-1 bg-[#7FB9DE] text-[#1F2937] rounded-sm hover:bg-[#6BA6CC] hover:text-white whitespace-nowrap">
+        <Link
+          href="/terms/new"
+        >
+          <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
             新規登録
           </button>
         </Link>
@@ -80,7 +83,7 @@ export default async function TermListPage({
       <hr className="mt-2 mb-2" />
 
       <div className="flex justify-between items-center">
-        <p className="text-sm text-gray-400">{terms.length}件</p>
+        <p className={LABEL_TEXT}>{terms.length}件</p>
         <div className="flex gap-2">
           <Link
             href="/"
@@ -105,7 +108,7 @@ export default async function TermListPage({
           {terms.map((term) => (
             <li key={term.id}>
               <Link href={`/terms/${term.id}`} className="hover:bg-gray-100">
-                {term.itemName}
+                ・{term.itemName}
               </Link>
             </li>
           ))}

@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { createTag } from "../_libs/_actions/tags";
 import { TAG_COLORS } from "../_libs/tagColors";
+import { BUTTON_PRIMARY } from "../_libs/buttonStyles";
 
 export default function CreateTagButton({ hasTags }: { hasTags: boolean }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -58,15 +59,16 @@ export default function CreateTagButton({ hasTags }: { hasTags: boolean }) {
           />
         ))}
       </div>
+      {error && <p className="text-red-500 text-sm">{error}</p>}
+
       <button
         onClick={handleCreate}
         disabled={isPending}
         type="button"
-        className="border rounded-sm px-2 py-1 bg-[#7FB9DE] text-[#1F2937] hover:bg-[#6BA6CC]"
+        className={BUTTON_PRIMARY}
       >
         決定
       </button>
-      {error && <p className="text-red-500 text-sm">{error}</p>}
       <button
         onClick={() => {
           setIsOpen(false);
