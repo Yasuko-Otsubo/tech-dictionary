@@ -2,6 +2,7 @@ import { getCurrentProfile } from "@/app/_libs/getCurrentProfile";
 import { prisma } from "@/app/_libs/prisma";
 import { notFound, redirect } from "next/navigation";
 import EditTermForm from "../_components/EditTermForm";
+import Link from "next/link";
 
 export default async function UpdateTerm({
   params,
@@ -39,6 +40,9 @@ export default async function UpdateTerm({
 
   return (
     <div>
+      <Link href="/" className="text-sm text-gray-400 hover:text-[#1F2937]">
+        ←　一覧に戻る
+      </Link>
       <EditTermForm
       tags={tags}
         id={term.id}
