@@ -10,8 +10,9 @@ import {
   LABEL_TEXT,
 } from "@/app/_libs/buttonStyles";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 export default function EditTermForm({
@@ -27,7 +28,7 @@ export default function EditTermForm({
     register,
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm<TermFormValues>({
     resolver: zodResolver(termSchema),
     defaultValues,
@@ -40,8 +41,13 @@ export default function EditTermForm({
 
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const [noChangeError, setNoChangeError] = useState(false);
 
   const onSubmit = (data: TermFormValues) => {
+    if (!isDirty) {
+      setNoChangeError(true);
+      return;
+    }
     startTransition(async () => {
       const result = await updateTerm(id, data);
       if (result.success) {
@@ -130,9 +136,18 @@ export default function EditTermForm({
         </div>
         <CreateTagButton hasTags={tags.length > 0} />
       </div>
-      <button className={`${BUTTON_PRIMARY} `} type="submit">
-        編集を保存する
-      </button>
+
+      {noChangeError && (
+        <p className="text-red-500 text-sm mb-2">変更されていません</p>
+      )}
+      <div className="flex gap-2">
+        <button className={`${BUTTON_PRIMARY} `} type="submit">
+          編集を保存する
+        </button>
+        <Link href="/" className={BUTTON_BASE}>
+          編集をキャンセルする
+        </Link>
+      </div>
     </form>
   );
 }

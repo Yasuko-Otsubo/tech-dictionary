@@ -48,13 +48,13 @@ export default function CreateTagButton({ hasTags }: { hasTags: boolean }) {
         placeholder="タグ名"
         className="border rounded-sm px-2 py-1"
       />
-      <div className="flex gap-1">
+      <div className="flex gap-2">
         {TAG_COLORS.map((c) => (
           <button
             key={c.value}
             type="button"
             onClick={() => setColor(c.value)}
-            className={`w-6 h-6 rounded-full border ${color === c.value ? "border-gray-800" : "border-gray-300"}`}
+            className={`w-8 h-8 rounded-full border ${color === c.value ? "border-gray-800" : "border-gray-300"}`}
             style={{ backgroundColor: c.value }}
           />
         ))}

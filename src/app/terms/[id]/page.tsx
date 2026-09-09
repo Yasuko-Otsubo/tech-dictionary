@@ -48,7 +48,7 @@ export default async function DetailTerm({
         {term.itemContent && (
           <div className="mb-4">
             <p className={LABEL_TEXT}>説明</p>
-            <p className="text-gray-700">{term.itemContent}</p>
+            <p>{term.itemContent}</p>
           </div>
         )}
         {term.image && (
