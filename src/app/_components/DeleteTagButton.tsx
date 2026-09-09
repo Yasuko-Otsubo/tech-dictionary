@@ -21,7 +21,7 @@ export default function DeleteTagButton({ id } : { id: number }) {
     type="button"
     onClick={handleDelete}
     disabled={isPending}
-    className="ml-1 text-[#1F2937] hover:text-red-600">
+    className="ml-1 px-1.5 py-1 text-[#1F2937] hover:text-red-600">
       ✖
     </button>
   )

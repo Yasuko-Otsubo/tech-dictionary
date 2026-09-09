@@ -107,7 +107,7 @@ export default async function TermListPage({
         <ul>
           {terms.map((term) => (
             <li key={term.id}>
-              <Link href={`/terms/${term.id}`} className="hover:bg-gray-100">
+              <Link href={`/terms/${term.id}`} className="block px-2 py-2 hover:bg-gray-100">
                 ・{term.itemName}
               </Link>
             </li>
