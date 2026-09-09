@@ -19,20 +19,21 @@ export default async function TermListPage({
 
   const { sort, q, tag } = await searchParams;
 
-  const terms = await prisma.terms.findMany({
-    where: {
-      userId: profile.id,
-      ...(q ? { itemName: { contains: q, mode: "insensitive" } } : {}),
-      ...(tag ? { tags: { some: { tagId: Number(tag) } } } : {}),
-    },
-    orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "asc" },
-  });
-
-  const tags = await prisma.tag.findMany({
-    where: {
-      userId: profile.id,
-    },
-  });
+  const [terms, tags] = await Promise.all([
+    prisma.terms.findMany({
+      where: {
+        userId: profile.id,
+        ...(q ? { itemName: { contains: q, mode: "insensitive" } } : {}),
+        ...(tag ? { tags: { some: { tagId: Number(tag) } } } : {}),
+      },
+      orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "asc" },
+    }),
+    prisma.tag.findMany({
+      where: {
+        userId: profile.id,
+      },
+    }),
+  ]);
 
   return (
     <div>
@@ -72,9 +73,7 @@ export default async function TermListPage({
           })}
           <CreateTagButton hasTags={tags.length > 0} />
         </div>
-        <Link
-          href="/terms/new"
-        >
+        <Link href="/terms/new">
           <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
             新規登録
           </button>
@@ -107,7 +106,10 @@ export default async function TermListPage({
         <ul>
           {terms.map((term) => (
             <li key={term.id}>
-              <Link href={`/terms/${term.id}`} className="block px-2 py-2 hover:bg-gray-100">
+              <Link
+                href={`/terms/${term.id}`}
+                className="block px-2 py-2 hover:bg-gray-100"
+              >
                 ・{term.itemName}
               </Link>
             </li>
