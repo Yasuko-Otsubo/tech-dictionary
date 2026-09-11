@@ -5,7 +5,7 @@ import Link from "next/link";
 import CreateTagButton from "./_components/CreateTagButton";
 import DeleteTagButton from "./_components/DeleteTagButton";
 import { BUTTON_BASE, BUTTON_PRIMARY, LABEL_TEXT } from "./_libs/buttonStyles";
-import MemorizedButton from "./_components/MemorizedButton";
+import MemorizedStars from "./_components/MemorizedStar";
 
 export default async function TermListPage({
   searchParams,
@@ -113,7 +113,7 @@ export default async function TermListPage({
               >
                 ・{term.itemName}
               </Link>
-              <MemorizedButton id={term.id} isMemorized={term.isMemorized} />
+              <MemorizedStars id={term.id} level={term.memorizedLevel} />
             </li>
           ))}
         </ul>
