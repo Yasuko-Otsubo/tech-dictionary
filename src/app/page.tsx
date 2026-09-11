@@ -5,6 +5,7 @@ import Link from "next/link";
 import CreateTagButton from "./_components/CreateTagButton";
 import DeleteTagButton from "./_components/DeleteTagButton";
 import { BUTTON_BASE, BUTTON_PRIMARY, LABEL_TEXT } from "./_libs/buttonStyles";
+import MemorizedStars from "./_components/MemorizedStar";
 
 export default async function TermListPage({
   searchParams,
@@ -37,21 +38,12 @@ export default async function TermListPage({
 
   return (
     <div>
-      <h1 className="text-2xl font-bold p-2">用語一覧</h1>
       <form>
-        <input
-          className="border mr-2 px-2 py-1 rounded-sm"
-          type="text"
-          name="q"
-          defaultValue={q}
-          placeholder="キーワードの一部でOK"
-        />
-        <button
-          type="submit"
-          className={`inline-block ${BUTTON_BASE} hover:bg-[#E4F1F8] cursor-pointer `}
-        >
-          検索
-        </button>
+        <Link href="/terms/new">
+          <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
+            新規登録
+          </button>
+        </Link>
       </form>
 
       <div className="flex gap-2 justify-between items-center mt-2 mb-2">
@@ -73,13 +65,22 @@ export default async function TermListPage({
           })}
           <CreateTagButton hasTags={tags.length > 0} />
         </div>
-        <Link href="/terms/new">
-          <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
-            新規登録
-          </button>
-        </Link>
       </div>
       <hr className="mt-2 mb-2" />
+
+      <input
+        className="border mr-2 px-2 py-1 rounded-sm"
+        type="text"
+        name="q"
+        defaultValue={q}
+        placeholder="キーワードの一部でOK"
+      />
+      <button
+        type="submit"
+        className={`inline-block ${BUTTON_BASE} hover:bg-[#E4F1F8] cursor-pointer `}
+      >
+        検索
+      </button>
 
       <div className="flex justify-between items-center">
         <p className={LABEL_TEXT}>{terms.length}件</p>
@@ -105,13 +106,14 @@ export default async function TermListPage({
       ) : (
         <ul>
           {terms.map((term) => (
-            <li key={term.id}>
+            <li key={term.id} className="flex justify-between items-center lock px-2 py-2 hover:bg-gray-100">
               <Link
                 href={`/terms/${term.id}`}
                 className="block px-2 py-2 hover:bg-gray-100"
               >
                 ・{term.itemName}
               </Link>
+              <MemorizedStars id={term.id} level={term.memorizedLevel} />
             </li>
           ))}
         </ul>

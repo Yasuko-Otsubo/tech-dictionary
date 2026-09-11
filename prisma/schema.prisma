@@ -23,7 +23,7 @@ model Terms {
   itemContent     String?
   referenceUrls   String[]
   image           String?
-  isMemorized     Boolean     @default(false)
+  memorizedLevel  Int         @default(0)
   userId          Int?
   createdAt       DateTime    @default(now()) @map("created_at")
   updatedAt       DateTime    @updatedAt  @map("updated_at")

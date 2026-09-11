@@ -110,3 +110,24 @@ export async function updateTerm(
 
   return { success: true };
 }
+
+export async function setMemorizedLevel(id: number, level: number) {
+  const profile = await getCurrentProfile();
+
+  if (!profile ) {
+    redirect("/login");
+  }
+
+  const term = await prisma.terms.findFirst({
+    where: { id, userId: profile.id },
+  });
+
+  if (!term) {
+    return;
+  }
+
+  await prisma.terms.update({
+    where: { id },
+    data: { memorizedLevel: level },
+  });
+}
