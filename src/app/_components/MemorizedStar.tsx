@@ -16,9 +16,10 @@ export default function MemorizedStars({
   const [, starTrantition] = useTransition();
 
   const handleClick = (star: number) => {
-    setDisplayLevel(star);
+    const newLevel = star === displayLevel ? 0 : star;
+    setDisplayLevel(newLevel);
     starTrantition(() => {
-      setMemorizedLevel(id, star);
+      setMemorizedLevel(id, newLevel);
     });
   };
 
