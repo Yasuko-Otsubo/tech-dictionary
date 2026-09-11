@@ -111,7 +111,7 @@ export async function updateTerm(
   return { success: true };
 }
 
-export async function toggleMemorized(id: number, isMemorized: boolean) {
+export async function setMemorizedLevel(id: number, level: number) {
   const profile = await getCurrentProfile();
 
   if (!profile ) {
@@ -128,6 +128,6 @@ export async function toggleMemorized(id: number, isMemorized: boolean) {
 
   await prisma.terms.update({
     where: { id },
-    data: { isMemorized: !isMemorized },
+    data: { memorizedLevel: level },
   });
 }
