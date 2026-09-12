@@ -38,75 +38,81 @@ export default async function TermListPage({
 
   return (
     <div>
-      <form>
-        <Link href="/terms/new">
-          <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
-            新規登録
-          </button>
-        </Link>
-      </form>
+      <div className="sticky top-0 z-10 bg-[var(--background)] pb-2">
+        <form>
+          <Link href="/terms/new">
+            <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
+              新規登録
+            </button>
+          </Link>
+        </form>
 
-      <div className="flex gap-2 justify-between items-center mt-2 mb-2">
-        <div>
-          {tags.map((t) => {
-            const isActive = tag === String(t.id);
-            return (
-              <div
-                key={t.id}
-                style={{ backgroundColor: t.color }}
-                className={`inline-block border rounded-sm px-2 py-1 mr-2 mb-2 text-[#1F2937] ${
-                  isActive ? "ring-2 ring-offset-1 ring-gray-800 " : ""
-                }`}
-              >
-                <Link href={isActive ? "/" : `/?tag=${t.id}`}>{t.name}</Link>
-                <DeleteTagButton id={t.id} />
-              </div>
-            );
-          })}
-          <CreateTagButton hasTags={tags.length > 0} />
+        <div className="flex gap-2 justify-between items-center mt-2 mb-2">
+          <div>
+            {tags.map((t) => {
+              const isActive = tag === String(t.id);
+              return (
+                <div
+                  key={t.id}
+                  style={{ backgroundColor: t.color }}
+                  className={`inline-block border rounded-sm px-2 py-1 mr-2 mb-2 text-[#1F2937] ${
+                    isActive ? "ring-2 ring-offset-1 ring-gray-800 " : ""
+                  }`}
+                >
+                  <Link href={isActive ? "/" : `/?tag=${t.id}`}>{t.name}</Link>
+                  <DeleteTagButton id={t.id} />
+                </div>
+              );
+            })}
+            <CreateTagButton hasTags={tags.length > 0} />
+          </div>
+        </div>
+        <hr className="mt-2 mb-2" />
+
+        <input
+          className="border mr-2 px-2 py-1 rounded-sm"
+          type="text"
+          name="q"
+          defaultValue={q}
+          placeholder="キーワードの一部でOK"
+        />
+        <button
+          type="submit"
+          className={`inline-block ${BUTTON_BASE} hover:bg-[#E4F1F8] cursor-pointer `}
+        >
+          検索
+        </button>
+
+        <div className="flex justify-between items-center">
+          <p className={LABEL_TEXT}>{terms.length}件</p>
+          <div className="flex gap-2">
+            <Link
+              href="/"
+              className={
+                !sort || sort !== "name" ? "text-[#1F2937] font-semibold" : ""
+              }
+            >
+              登録順
+            </Link>
+            <Link
+              href="/?sort=name"
+              className={sort === "name" ? "text-[#1F2937] font-semibold" : ""}
+            >
+              あいうえお順
+            </Link>
+          </div>
         </div>
       </div>
-      <hr className="mt-2 mb-2" />
 
-      <input
-        className="border mr-2 px-2 py-1 rounded-sm"
-        type="text"
-        name="q"
-        defaultValue={q}
-        placeholder="キーワードの一部でOK"
-      />
-      <button
-        type="submit"
-        className={`inline-block ${BUTTON_BASE} hover:bg-[#E4F1F8] cursor-pointer `}
-      >
-        検索
-      </button>
-
-      <div className="flex justify-between items-center">
-        <p className={LABEL_TEXT}>{terms.length}件</p>
-        <div className="flex gap-2">
-          <Link
-            href="/"
-            className={
-              !sort || sort !== "name" ? "text-[#1F2937] font-semibold" : ""
-            }
-          >
-            登録順
-          </Link>
-          <Link
-            href="/?sort=name"
-            className={sort === "name" ? "text-[#1F2937] font-semibold" : ""}
-          >
-            あいうえお順
-          </Link>
-        </div>
-      </div>
       {terms.length === 0 ? (
         <p className="text-gray-500 mt-4">該当するものがありません</p>
       ) : (
         <ul>
           {terms.map((term) => (
-            <li key={term.id} className="flex justify-between items-center lock px-2 py-2 hover:bg-gray-100">
+            <li
+              key={term.id}
+              className="flex justify-between items-center px-2 py-2 hover:bg-gray-100"
+            >
               <Link
                 href={`/terms/${term.id}`}
                 className="block px-2 py-2 hover:bg-gray-100"
