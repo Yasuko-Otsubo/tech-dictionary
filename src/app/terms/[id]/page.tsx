@@ -4,7 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import DeleteTermButton from "./_components/DeleteTermButton";
 import Link from "next/link";
 import { BUTTON_BASE, LABEL_TEXT } from "@/app/_libs/buttonStyles";
-import Image from "next/image";
+import ImageGallery from "./_components/ImageGallery";
 
 export default async function DetailTerm({
   params,
@@ -55,18 +55,7 @@ export default async function DetailTerm({
         {term.images.length > 0 && (
           <div className="mb-4">
             <p className={LABEL_TEXT}>画像</p>
-            <div className="flex flex-wrap gap-2">
-              {term.images.map((url, index) => (
-                <div key={index} className="relative w-40 h-40">
-                <Image
-                  src={url}
-                  alt={`${term.itemName}の画像${index + 1}`}
-                  fill
-                  className="object-cover rounded-sm"
-                />
-                </div>
-              ))}
-            </div>
+            <ImageGallery images={term.images} itemName={term.itemName} />
           </div>
         )}
         {term.referenceUrls.length > 0 && (
