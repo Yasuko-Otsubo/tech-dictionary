@@ -9,9 +9,10 @@ import {
   BUTTON_PRIMARY,
   LABEL_TEXT,
 } from "@/app/_libs/buttonStyles";
+import { supabase } from "@/app/_libs/supabase";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 
 export default function NewTermForm({
@@ -34,13 +35,39 @@ export default function NewTermForm({
   });
 
   const [isPending, startTransition] = useTransition();
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const [uploadErrors, setUploadErrors] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const router = useRouter();
 
-  const onSubmit = (data: TermFormValues) => {
+  const onSubmit = async (data: TermFormValues) => {
+    const imageUrls: string[] = [];
+    setUploadErrors([]);
+
+    for (const file of selectedFiles) {
+      const filePath = `${file.lastModified}-${file.name}`;
+      const { error } = await supabase.storage
+        .from("term-images")
+        .upload(filePath, file);
+
+      if (error) {
+        setUploadErrors((prev) => [...prev, `${file.name}のアップロードに失敗しました`]);
+        console.error("アップロード失敗:", error);
+      } else {
+        const { data: publicUrlData } = supabase.storage
+          .from("term-images")
+          .getPublicUrl(filePath);
+        imageUrls.push(publicUrlData.publicUrl);
+      }
+    }
+
     startTransition(async () => {
-      const result = await createTerm(data);
+      const result = await createTerm({ ...data, images: imageUrls });
       if (result.success) {
         router.push("/");
+      } else {
+        console.error("用語登録失敗", result.error);
+        setSubmitError(result.error);
       }
     });
   };
@@ -75,14 +102,19 @@ export default function NewTermForm({
       <div className="mb-4">
         <p className={LABEL_TEXT}>画像</p>
         <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
           className={`${BUTTON_BASE} w-full`}
           id="image"
-          {...register("image")}
         />
-        {errors.image && (
-          <p className="text-red-500 text-sm mt-1">{errors.image.message}</p>
-        )}
       </div>
+      {uploadErrors.map((message, index) => (
+        <p key={index} className="text-red-500 text-sm mt-1">
+          {message}
+        </p>
+      ))}
       <div className="mb-4">
         <p className={LABEL_TEXT}>参考URL</p>
         {fields.map((field, index) => (
@@ -126,9 +158,12 @@ export default function NewTermForm({
         <CreateTagButton hasTags={tags.length > 0} />
       </div>
 
+      {submitError && (
+        <p className="text-red-500 text-sm mb-2">{submitError}</p>
+      )}
       <button type="submit" disabled={isPending} className={BUTTON_PRIMARY}>
         登録
       </button>
     </form>
-  )
+  );
 }
