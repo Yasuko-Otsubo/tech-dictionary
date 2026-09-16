@@ -4,6 +4,7 @@ import { notFound, redirect } from "next/navigation";
 import DeleteTermButton from "./_components/DeleteTermButton";
 import Link from "next/link";
 import { BUTTON_BASE, LABEL_TEXT } from "@/app/_libs/buttonStyles";
+import ImageGallery from "./_components/ImageGallery";
 
 export default async function DetailTerm({
   params,
@@ -51,14 +52,10 @@ export default async function DetailTerm({
             <p>{term.itemContent}</p>
           </div>
         )}
-        {term.image && (
+        {term.images.length > 0 && (
           <div className="mb-4">
             <p className={LABEL_TEXT}>画像</p>
-            <img
-              src={term.image}
-              alt={term.itemName}
-              className="max-w-full rounded-sm mb-4"
-            />
+            <ImageGallery images={term.images} itemName={term.itemName} />
           </div>
         )}
         {term.referenceUrls.length > 0 && (

@@ -27,7 +27,7 @@ export default async function TermListPage({
         ...(q ? { itemName: { contains: q, mode: "insensitive" } } : {}),
         ...(tag ? { tags: { some: { tagId: Number(tag) } } } : {}),
       },
-      orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "asc" },
+      orderBy: sort === "name" ? { itemName: "asc" } : { createdAt: "desc" },
     }),
     prisma.tag.findMany({
       where: {

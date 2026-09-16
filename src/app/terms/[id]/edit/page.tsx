@@ -50,7 +50,7 @@ export default async function UpdateTerm({
           itemName: term.itemName,
           itemContent: term.itemContent ?? "",
           referenceUrls: term.referenceUrls.map((url) => ({ value: url })),
-          image: term.image ?? "",
+          images: term.images,
           tags: term.tags.map((t) => t.tag.name),
         }}
       />
