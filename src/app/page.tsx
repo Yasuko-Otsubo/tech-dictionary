@@ -6,6 +6,7 @@ import CreateTagButton from "./_components/CreateTagButton";
 import DeleteTagButton from "./_components/DeleteTagButton";
 import { BUTTON_BASE, BUTTON_PRIMARY, LABEL_TEXT } from "./_libs/buttonStyles";
 import MemorizedStars from "./_components/MemorizedStar";
+import TagManagerModal from "./_components/TagManagerModal";
 
 export default async function TermListPage({
   searchParams,
@@ -45,6 +46,7 @@ export default async function TermListPage({
               新規登録
             </button>
           </Link>
+          <TagManagerModal hasTag={tags.length > 0} />
         </form>
 
         <div className="flex gap-2 justify-between items-center mt-2 mb-2">
