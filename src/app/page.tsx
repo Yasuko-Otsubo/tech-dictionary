@@ -46,7 +46,7 @@ export default async function TermListPage({
               新規登録
             </button>
           </Link>
-          <TagManagerModal hasTag={tags.length > 0} />
+          <TagManagerModal hasTag={tags.length > 0} tags={tags} />
         </form>
 
         <div className="flex gap-2 justify-between items-center mt-2 mb-2">
