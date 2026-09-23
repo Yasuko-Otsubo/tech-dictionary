@@ -39,7 +39,7 @@ export default async function TermListPage({
   return (
     <div>
       <div className="sticky top-0 z-10 bg-[var(--background)] pb-2">
-        <form>
+        <form className="flex justify-between items-center">
           <Link href="/terms/new">
             <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
               新規登録

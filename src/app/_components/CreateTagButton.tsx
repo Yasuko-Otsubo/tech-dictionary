@@ -41,7 +41,7 @@ export default function CreateTagButton({ hasTags }: { hasTags: boolean }) {
   }
 
   return (
-    <div className="mt-2 flex items-center gap-2">
+    <div className="mt-2 flex flex-wrap items-center gap-2">
       <input
         value={name}
         onChange={(e) => setName(e.target.value)}

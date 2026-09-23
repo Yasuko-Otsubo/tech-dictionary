@@ -46,8 +46,8 @@ export default function TagManagerModal({
 
   if (!isOpen) {
     return (
-      <button onClick={() => setIsOpen(true)} type="button">
-        {hasTag ? "＋" : "タグ追加"}
+      <button onClick={() => setIsOpen(true)} type="button" className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
+        {hasTag ? "タグ管理" : "タグ追加"}
       </button>
     );
   }
@@ -84,7 +84,7 @@ export default function TagManagerModal({
               value={editName}
               onChange={(e) => setEditName(e.target.value)}
               placeholder="タグ名"
-              className="border rounded-sm px-2 py-1"
+              className="border rounded-sm px-2 py-1 mb-2"
             />
             <div className="flex gap-2">
               {TAG_COLORS.map((c) => (
@@ -97,7 +97,6 @@ export default function TagManagerModal({
                 />
               ))}
             </div>
-            <DeleteTagButton id={selectedTag.id} />
             {error && <p className="text-red-500 text-sm">{error}</p>}
             <button
               onClick={handleUpdate}
@@ -107,6 +106,7 @@ export default function TagManagerModal({
             >
               決定
             </button>
+            <DeleteTagButton id={selectedTag.id} />
             <button
               onClick={() => {
                 setIsOpen(false);
