@@ -3,9 +3,9 @@ import { getCurrentProfile } from "./_libs/getCurrentProfile";
 import { prisma } from "./_libs/prisma";
 import Link from "next/link";
 import CreateTagButton from "./_components/CreateTagButton";
-import DeleteTagButton from "./_components/DeleteTagButton";
 import { BUTTON_BASE, BUTTON_PRIMARY, LABEL_TEXT } from "./_libs/buttonStyles";
 import MemorizedStars from "./_components/MemorizedStar";
+import TagManagerModal from "./_components/TagManagerModal";
 
 export default async function TermListPage({
   searchParams,
@@ -39,12 +39,13 @@ export default async function TermListPage({
   return (
     <div>
       <div className="sticky top-0 z-10 bg-[var(--background)] pb-2">
-        <form>
+        <form className="flex justify-between items-center">
           <Link href="/terms/new">
             <button className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
               新規登録
             </button>
           </Link>
+          <TagManagerModal hasTag={tags.length > 0} tags={tags} />
         </form>
 
         <div className="flex gap-2 justify-between items-center mt-2 mb-2">
@@ -60,7 +61,6 @@ export default async function TermListPage({
                   }`}
                 >
                   <Link href={isActive ? "/" : `/?tag=${t.id}`}>{t.name}</Link>
-                  <DeleteTagButton id={t.id} />
                 </div>
               );
             })}

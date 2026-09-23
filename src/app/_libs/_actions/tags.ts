@@ -1,4 +1,4 @@
-"use server"
+"use server";
 
 import { redirect } from "next/navigation";
 import { getCurrentProfile } from "../getCurrentProfile";
@@ -6,14 +6,17 @@ import { prisma } from "../prisma";
 
 type TagResponse = { success: true } | { success: false; error: string };
 
-export async function createTag(name: string, color: string): Promise<TagResponse>{
+export async function createTag(
+  name: string,
+  color: string,
+): Promise<TagResponse> {
   const profile = await getCurrentProfile();
 
   if (!profile) {
     redirect("/login");
   }
 
-  if (!name || name.trim() === "" ) {
+  if (!name || name.trim() === "") {
     return { success: false, error: "タグ名を入力してください" };
   }
 
@@ -22,7 +25,7 @@ export async function createTag(name: string, color: string): Promise<TagRespons
   });
 
   if (existing) {
-    return { success: false, error: "同じ名前のタグが既に存在します。"};
+    return { success: false, error: "同じ名前のタグが既に存在します。" };
   }
 
   await prisma.tag.create({
@@ -31,6 +34,33 @@ export async function createTag(name: string, color: string): Promise<TagRespons
       color,
       userId: profile.id,
     },
+  });
+
+  return { success: true };
+}
+
+export async function updateTag(
+  id: number,
+  name: string,
+  color: string,
+): Promise<TagResponse> {
+  const profile = await getCurrentProfile();
+
+  if (!profile) {
+    redirect("/login");
+  }
+
+  const tag = await prisma.tag.findFirst({
+    where: { id, userId: profile.id },
+  });
+
+  if (!tag) {
+    return { success: false, error: "タグが見つかりません" };
+  }
+
+  await prisma.tag.update({
+    where: { id },
+    data: { name, color },
   });
 
   return { success: true };
