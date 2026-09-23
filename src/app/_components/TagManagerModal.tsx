@@ -28,15 +28,20 @@ export default function TagManagerModal({
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const resetAndClose = () => {
+    setIsOpen(false);
+    setSelectedTagId(null);
+    setEditName("");
+    setEditColor("");
+    setError(null);
+  };
   const selectedTag = tags.find((tag) => tag.id === selectedTagId);
   const handleUpdate = () => {
     if (!selectedTag) return;
     startTransition(async () => {
       const result = await updateTag(selectedTag.id, editName, editColor);
       if (result.success) {
-        setEditName("");
-        setEditColor("");
-        setIsOpen(false);
+        resetAndClose();
         router.refresh();
       } else {
         setError(result.error);
@@ -44,9 +49,17 @@ export default function TagManagerModal({
     });
   };
 
+  const isDirty = selectedTag
+    ? editName !== selectedTag.name || editColor !== selectedTag.color
+    : false;
+
   if (!isOpen) {
     return (
-      <button onClick={() => setIsOpen(true)} type="button" className={`${BUTTON_PRIMARY} whitespace-nowrap`}>
+      <button
+        onClick={() => setIsOpen(true)}
+        type="button"
+        className={`${BUTTON_PRIMARY} whitespace-nowrap`}
+      >
         {hasTag ? "タグ管理" : "タグ追加"}
       </button>
     );
@@ -55,7 +68,7 @@ export default function TagManagerModal({
   return (
     <div
       className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4"
-      onClick={() => setIsOpen(false)}
+      onClick={resetAndClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
@@ -106,16 +119,17 @@ export default function TagManagerModal({
             >
               決定
             </button>
-            <DeleteTagButton id={selectedTag.id} />
+            {isDirty ? (
+              <p className="text-sm text-gray-400">編集中は削除できません</p>
+            ) : (
+              <DeleteTagButton id={selectedTag.id} />
+            )}
             <button
-              onClick={() => {
-                setIsOpen(false);
-                setEditName("");
-              }}
+              onClick={resetAndClose}
               type="button"
               className="border rounded-sm px-2 py-1 text-gray-500 hover:bg-gray-100"
             >
-              キャンセル
+              閉じる
             </button>
           </div>
         )}
