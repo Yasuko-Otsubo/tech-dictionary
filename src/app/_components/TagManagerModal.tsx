@@ -1,7 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import DeleteTagButton from "./DeleteTagButton";
+import { TAG_COLORS } from "../_libs/tagColors";
+import { updateTag } from "../_libs/_actions/tags";
+import { useRouter } from "next/navigation";
+import { BUTTON_PRIMARY } from "../_libs/buttonStyles";
 
 type Tag = {
   id: number;
@@ -18,7 +22,26 @@ export default function TagManagerModal({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedTagId, setSelectedTagId] = useState<number | null>(null);
+  const [editName, setEditName] = useState("");
+  const [editColor, setEditColor] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const selectedTag = tags.find((tag) => tag.id === selectedTagId);
+  const handleUpdate = () => {
+    if (!selectedTag) return;
+    startTransition(async () => {
+      const result = await updateTag(selectedTag.id, editName, editColor);
+      if (result.success) {
+        setEditName("");
+        setEditColor("");
+        setIsOpen(false);
+        router.refresh();
+      } else {
+        setError(result.error);
+      }
+    });
+  };
 
   if (!isOpen) {
     return (
@@ -41,7 +64,11 @@ export default function TagManagerModal({
           <button
             key={tag.id}
             type="button"
-            onClick={() => setSelectedTagId(tag.id)}
+            onClick={() => {
+              setSelectedTagId(tag.id);
+              setEditName(tag.name);
+              setEditColor(tag.color);
+            }}
             style={{ backgroundColor: tag.color }}
             className="inline-block border rounded-sm px-2 py-1 mr-2 mb-2 text-[#1F2937]"
           >
@@ -50,8 +77,43 @@ export default function TagManagerModal({
         ))}
         {selectedTag && (
           <div className="mt-4 border-t pt-4">
-            <p>{selectedTag.name}を編集</p>
+            <input
+              value={editName}
+              onChange={(e) => setEditName(e.target.value)}
+              placeholder="タグ名"
+              className="border rounded-sm px-2 py-1"
+            />
+            <div className="flex gap-2">
+              {TAG_COLORS.map((c) => (
+                <button
+                  key={c.value}
+                  type="button"
+                  onClick={() => setEditColor(c.value)}
+                  className={`w-8 h-8 rounded-full border ${editColor === c.value ? "border-gray-800" : "border-gray-300"}`}
+                  style={{ backgroundColor: c.value }}
+                />
+              ))}
+            </div>
             <DeleteTagButton id={selectedTag.id} />
+            {error && <p className="text-red-500 text-sm">{error}</p>}
+            <button
+              onClick={handleUpdate}
+              disabled={isPending}
+              type="button"
+              className={BUTTON_PRIMARY}
+            >
+              決定
+            </button>
+            <button
+              onClick={() => {
+                setIsOpen(false);
+                setEditName("");
+              }}
+              type="button"
+              className="border rounded-sm px-2 py-1 text-gray-500 hover:bg-gray-100"
+            >
+              キャンセル
+            </button>
           </div>
         )}
       </div>
