@@ -6,6 +6,7 @@ import { TAG_COLORS } from "../_libs/tagColors";
 import { updateTag } from "../_libs/_actions/tags";
 import { useRouter } from "next/navigation";
 import { BUTTON_PRIMARY } from "../_libs/buttonStyles";
+import CreateTagButton from "./CreateTagButton";
 
 type Tag = {
   id: number;
@@ -75,6 +76,8 @@ export default function TagManagerModal({
             {tag.name}
           </button>
         ))}
+        <CreateTagButton hasTags={tags.length > 0} />
+
         {selectedTag && (
           <div className="mt-4 border-t pt-4">
             <input

@@ -3,7 +3,6 @@ import { getCurrentProfile } from "./_libs/getCurrentProfile";
 import { prisma } from "./_libs/prisma";
 import Link from "next/link";
 import CreateTagButton from "./_components/CreateTagButton";
-import DeleteTagButton from "./_components/DeleteTagButton";
 import { BUTTON_BASE, BUTTON_PRIMARY, LABEL_TEXT } from "./_libs/buttonStyles";
 import MemorizedStars from "./_components/MemorizedStar";
 import TagManagerModal from "./_components/TagManagerModal";
@@ -62,7 +61,6 @@ export default async function TermListPage({
                   }`}
                 >
                   <Link href={isActive ? "/" : `/?tag=${t.id}`}>{t.name}</Link>
-                  <DeleteTagButton id={t.id} />
                 </div>
               );
             })}
