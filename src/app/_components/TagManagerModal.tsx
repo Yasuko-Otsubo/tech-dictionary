@@ -111,26 +111,32 @@ export default function TagManagerModal({
               ))}
             </div>
             {error && <p className="text-red-500 text-sm">{error}</p>}
-            <button
-              onClick={handleUpdate}
-              disabled={isPending}
-              type="button"
-              className={BUTTON_PRIMARY}
-            >
-              決定
-            </button>
-            {isDirty ? (
-              <p className="text-sm text-gray-400">編集中は削除できません</p>
-            ) : (
-              <DeleteTagButton id={selectedTag.id} />
-            )}
-            <button
-              onClick={resetAndClose}
-              type="button"
-              className="border rounded-sm px-2 py-1 text-gray-500 hover:bg-gray-100"
-            >
-              閉じる
-            </button>
+            <div className="mt-4 flex flex-col gap-3">
+              <button
+                onClick={handleUpdate}
+                disabled={isPending}
+                type="button"
+                className={`${BUTTON_PRIMARY} w-full`}
+              >
+                決定
+              </button>
+              <div className="flex justify-between items-center">
+                {isDirty ? (
+                  <p className="text-sm text-gray-400">
+                    編集中は削除できません
+                  </p>
+                ) : (
+                  <DeleteTagButton id={selectedTag.id} />
+                )}
+                <button
+                  onClick={resetAndClose}
+                  type="button"
+                  className="border rounded-sm px-2 py-1 text-gray-500 hover:bg-gray-100"
+                >
+                  閉じる
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </div>
