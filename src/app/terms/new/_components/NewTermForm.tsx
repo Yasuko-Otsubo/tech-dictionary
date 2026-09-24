@@ -27,6 +27,7 @@ export default function NewTermForm({
     formState: { errors },
   } = useForm<TermFormValues>({
     resolver: zodResolver(termSchema),
+    defaultValues: { tags: [] },
   });
 
   const { fields, append, remove } = useFieldArray({
