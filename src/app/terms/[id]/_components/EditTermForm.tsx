@@ -110,6 +110,17 @@ export default function EditTermForm({
       </div>
 
       <div className="mb-4">
+        <p className={LABEL_TEXT}>画像</p>
+        <input
+          type="file"
+          multiple
+          accept="image/*"
+          onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
+          className={`${BUTTON_BASE} w-full`}
+          id="image"
+        />
+      </div>
+            <div className="mb-4">
         <p className={LABEL_TEXT}>説明</p>
         <input
           className={`${BUTTON_BASE} w-full`}
@@ -123,17 +134,6 @@ export default function EditTermForm({
         )}
       </div>
 
-      <div className="mb-4">
-        <p className={LABEL_TEXT}>画像</p>
-        <input
-          type="file"
-          multiple
-          accept="image/*"
-          onChange={(e) => setSelectedFiles(Array.from(e.target.files ?? []))}
-          className={`${BUTTON_BASE} w-full`}
-          id="image"
-        />
-      </div>
       {uploadErrors.map((message, index) => (
         <p key={index} className="text-red-500 text-sm mt-1">
           {message}
