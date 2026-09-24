@@ -51,7 +51,10 @@ export default function NewTermForm({
         .upload(filePath, file);
 
       if (error) {
-        setUploadErrors((prev) => [...prev, `${file.name}のアップロードに失敗しました`]);
+        setUploadErrors((prev) => [
+          ...prev,
+          `${file.name}のアップロードに失敗しました`,
+        ]);
         console.error("アップロード失敗:", error);
       } else {
         const { data: publicUrlData } = supabase.storage
@@ -162,7 +165,7 @@ export default function NewTermForm({
         <p className="text-red-500 text-sm mb-2">{submitError}</p>
       )}
       <button type="submit" disabled={isPending} className={BUTTON_PRIMARY}>
-        登録
+        {isPending ? "登録中..." : "登録"}
       </button>
     </form>
   );
