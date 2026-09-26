@@ -120,7 +120,7 @@ export default function EditTermForm({
           id="image"
         />
       </div>
-            <div className="mb-4">
+      <div className="mb-4">
         <p className={LABEL_TEXT}>説明</p>
         <input
           className={`${BUTTON_BASE} w-full`}
