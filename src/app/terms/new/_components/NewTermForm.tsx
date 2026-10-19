@@ -14,6 +14,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import RichTextEditor from "@/app/_components/RichTextEditor";
 
 export default function NewTermForm({
   tags,
@@ -39,6 +40,7 @@ export default function NewTermForm({
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [uploadErrors, setUploadErrors] = useState<string[]>([]);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [itemContent, setItemContent] = useState("");
   const router = useRouter();
 
   const onSubmit = async (data: TermFormValues) => {
@@ -66,7 +68,7 @@ export default function NewTermForm({
     }
 
     startTransition(async () => {
-      const result = await createTerm({ ...data, images: imageUrls });
+      const result = await createTerm({ ...data, images: imageUrls, itemContent});
       if (result.success) {
         router.push("/");
       } else {
@@ -101,18 +103,9 @@ export default function NewTermForm({
           id="image"
         />
       </div>
-            <div className="mb-4">
+      <div className="mb-4">
         <p className={LABEL_TEXT}>説明</p>
-        <input
-          className={`${BUTTON_BASE} w-full`}
-          id="itemContent"
-          {...register("itemContent")}
-        />
-        {errors.itemContent && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.itemContent.message}
-          </p>
-        )}
+        <RichTextEditor content={itemContent} onChange={setItemContent} />
       </div>
 
       {uploadErrors.map((message, index) => (
