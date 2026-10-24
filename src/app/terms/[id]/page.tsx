@@ -50,7 +50,7 @@ export default async function DetailTerm({
         {term.itemContent && (
           <div className="mb-4">
             <p className={LABEL_TEXT}>説明</p>
-            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(term.itemContent)}} />
+            <div className="[&_p]:mb-2  [&_p:empty]:min-h-[1em]" dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(term.itemContent)}} />
           </div>
         )}
         {term.images.length > 0 && (
