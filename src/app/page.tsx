@@ -64,7 +64,6 @@ export default async function TermListPage({
                 </div>
               );
             })}
-            <CreateTagButton hasTags={tags.length > 0} />
           </div>
         </div>
         <hr className="mt-2 mb-2" />
