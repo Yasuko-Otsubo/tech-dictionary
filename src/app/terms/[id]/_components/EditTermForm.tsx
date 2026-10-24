@@ -15,6 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import RichTextEditor from "@/app/_components/RichTextEditor";
 
 export default function EditTermForm({
   id,
@@ -46,6 +47,7 @@ export default function EditTermForm({
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const router = useRouter();
   const [noChangeError, setNoChangeError] = useState(false);
+  const [itemContent, setItemContent] = useState(defaultValues.itemContent ?? "");
 
   const onSubmit = async (data: TermFormValues) => {
     if (!isDirty && selectedFiles.length === 0) {
@@ -85,7 +87,7 @@ export default function EditTermForm({
     }
 
     startTransition(async () => {
-      const result = await updateTerm(id, { ...data, images: imageUrls });
+      const result = await updateTerm(id, { ...data, images: imageUrls,  itemContent});
       if (result.success) {
         router.push("/");
       } else {
@@ -122,16 +124,7 @@ export default function EditTermForm({
       </div>
       <div className="mb-4">
         <p className={LABEL_TEXT}>説明</p>
-        <input
-          className={`${BUTTON_BASE} w-full`}
-          id="itemContent"
-          {...register("itemContent")}
-        />
-        {errors.itemContent && (
-          <p className="text-red-500 text-sm mt-1">
-            {errors.itemContent.message}
-          </p>
-        )}
+        <RichTextEditor content={itemContent} onChange={setItemContent} />
       </div>
 
       {uploadErrors.map((message, index) => (
