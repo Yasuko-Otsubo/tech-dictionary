@@ -5,6 +5,7 @@ import DeleteTermButton from "./_components/DeleteTermButton";
 import Link from "next/link";
 import { BUTTON_BASE, LABEL_TEXT } from "@/app/_libs/buttonStyles";
 import ImageGallery from "./_components/ImageGallery";
+import DOMPurify from "isomorphic-dompurify";
 
 export default async function DetailTerm({
   params,
@@ -49,7 +50,7 @@ export default async function DetailTerm({
         {term.itemContent && (
           <div className="mb-4">
             <p className={LABEL_TEXT}>説明</p>
-            <p>{term.itemContent}</p>
+            <div dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(term.itemContent)}} />
           </div>
         )}
         {term.images.length > 0 && (
