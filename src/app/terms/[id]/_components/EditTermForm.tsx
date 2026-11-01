@@ -50,7 +50,9 @@ export default function EditTermForm({
   const [itemContent, setItemContent] = useState(defaultValues.itemContent ?? "");
 
   const onSubmit = async (data: TermFormValues) => {
-    if (!isDirty && selectedFiles.length === 0) {
+    if (!isDirty && 
+      selectedFiles.length === 0 &&
+      itemContent === (defaultValues.itemContent ?? "")) {
       setNoChangeError(true);
       return;
     }
