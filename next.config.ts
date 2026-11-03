@@ -11,7 +11,7 @@ const nextConfig: NextConfig = {
     ],
   },
   /* config options here */
-   serverExternalPackages: ["isomorphic-dompurify", "jsdom"],
+   serverExternalPackages: ["jsdom"],
 };
 
 export default nextConfig;
